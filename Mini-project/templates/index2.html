@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real-time System Performance Info</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .metric-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-gap: 20px;
+    }
+
+    .metric-box {
+      background-color: #f3f3f3;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .metric-label {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const socket = io.connect('http://localhost:5001');
+
+      socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+
+      socket.on('performance_info', (data) => {
+        document.getElementById('cpu-usage').textContent = data['CPU Usage'];
+        document.getElementById('memory-usage').textContent = data['Memory Usage'];
+        document.getElementById('disk-usage').textContent = data['Disk Usage'];
+        document.getElementById('network-bytes-sent').textContent = data['Network Bytes Sent'];
+        document.getElementById('network-bytes-received').textContent = data['Network Bytes Received'];
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Real-time System Performance Info</h1>
+  <div class="metric-container">
+    <div class="metric-box">
+      <div class="metric-label">CPU Usage</div>
+      <div class="metric-value" id="cpu-usage"></div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">Memory Usage</div>
+      <div class="metric-value" id="memory-usage"></div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">Disk Usage</div>
+      <div class="metric-value" id="disk-usage"></div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">Network Bytes Sent</div>
+      <div class="metric-value" id="network-bytes-sent"></div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-label">Network Bytes Received</div>
+      <div class="metric-value" id="network-bytes-received"></div>
+    </div>
+  </div>
+</body>
+</html>
